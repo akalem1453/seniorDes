@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,4 +21,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(),login.class));
         finish();
     }
+    public void gotoroute(View view){
+        startActivity(new Intent(getApplicationContext(),addroute.class));
+    }
+
+
 }
