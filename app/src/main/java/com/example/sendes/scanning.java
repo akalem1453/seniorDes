@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -128,11 +129,23 @@ public class scanning extends AppCompatActivity {
             {
                 case Barcode.TYPE_TEXT:
                 {
+                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+                    builder.setMessage(item.getRawValue());
+                    builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialoginterface, int i) {
+                            dialoginterface.dismiss();
 
-
+                        }
+                    });
+                    androidx.appcompat.app.AlertDialog dialog = builder.create();
+                    dialog.show();
 
                 }
                 break;
+
+
+
 
                 default:
                     break;
