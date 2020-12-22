@@ -24,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
     public void gotoroute(View view){
         startActivity(new Intent(getApplicationContext(),addroute.class));
     }
+    public void selectRoute(View view){
+        startActivity(new Intent(getApplicationContext(),selectRoute.class));
+    }
 
 
 }

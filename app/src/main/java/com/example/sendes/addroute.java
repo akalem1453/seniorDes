@@ -1,14 +1,18 @@
 package com.example.sendes;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,16 +38,17 @@ public class addroute extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    TextView code;
-    Button scan;
-    Button add_point;
-    Button add_route;
-    public ArrayList<ExampleItem> mExampleList;
-    FirebaseFirestore fStore;
-    FirebaseAuth fAuth;
-    String Uid;
-    String  codeArray[];
-    List<String>  tags;
+    private TextView code;
+    private Button scan;
+    private Button add_point;
+    private Button add_route;
+    private ArrayList<ExampleItem> mExampleList;
+    private FirebaseFirestore fStore;
+    private FirebaseAuth fAuth;
+    private String Uid;
+    private String  codeArray[];
+    private List<String>  tags;
+    private String routeName;
 
 
 
@@ -58,6 +63,15 @@ public class addroute extends AppCompatActivity {
         mExampleList = new ArrayList<>();
 
 
+
+
+        mRecyclerView = findViewById(R.id.newroute_recyler);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new ExampleAdapter(mExampleList);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
         add_point = findViewById(R.id.add_btn);
         add_point.setOnClickListener(new View.OnClickListener() {
@@ -77,33 +91,49 @@ public class addroute extends AppCompatActivity {
 
 
 
-        mRecyclerView = findViewById(R.id.newroute_recyler);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new ExampleAdapter(mExampleList);
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-
-
-
 
         add_route = findViewById(R.id.upload_route);
         add_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 fAuth = FirebaseAuth.getInstance();
                 fStore = FirebaseFirestore.getInstance();
                 Uid = fAuth.getCurrentUser().getUid();
                 codeArray = new String[mExampleList.size()];
+                AlertDialog.Builder nameDialog = new AlertDialog.Builder(addroute.this);
+                nameDialog.setTitle("Enter Route Name");
 
-                for(int i = 0; i <mExampleList.size();i++){
-                    codeArray[i] = mExampleList.get(i).getmText2();
-                }
-                tags = Arrays.asList(codeArray);
-                Map<String, Object> new_route = new HashMap<>();
-                new_route.put("route", tags);
-                 fStore.collection("users").document(Uid).collection("routes").document("route1").set(new_route);
+                EditText nameinput = new EditText(addroute.this);
+                nameDialog.setView(nameinput);
+                nameinput.setInputType(InputType.TYPE_CLASS_TEXT);
+                nameDialog.setPositiveButton("Add route", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        routeName = nameinput.getText().toString();
+                        for(int i = 0; i <mExampleList.size();i++){
+                            codeArray[i] = mExampleList.get(i).getmText2();
+                        }
+                        tags = Arrays.asList(codeArray);
+                        Map<String, Object> new_route = new HashMap<>();
+                        new_route.put("route", tags);
+
+                        fStore.collection("users").document(Uid).collection("routes").document(routeName).set(new_route);
+                        gotoMain();
+
+
+
+
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                nameDialog.show();
 
 
 
@@ -118,12 +148,15 @@ public class addroute extends AppCompatActivity {
 
 
 
-
-
-
-
-
     }
+
+
+    public void gotoMain(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+
 
 
     public void start(View view){

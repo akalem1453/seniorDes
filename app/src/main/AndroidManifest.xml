@@ -14,12 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SenDes">
-        <activity android:name=".scanning"
-            android:screenOrientation="portrait">
-
-
-
-        </activity>
+        <activity android:name=".Coductor"></activity>
+        <activity android:name=".selectRoute" />
+        <activity
+            android:name=".scanning"
+            android:screenOrientation="portrait" />
         <activity android:name=".addroute" />
         <activity android:name=".Register" />
         <activity android:name=".MainActivity" />
