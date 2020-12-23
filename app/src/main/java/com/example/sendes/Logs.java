@@ -1,7 +1,6 @@
 package com.example.sendes;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,63 +11,54 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class selectRoute extends AppCompatActivity implements Serializable {
+public class Logs extends AppCompatActivity {
+
     private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private FirebaseAuth fAuth = FirebaseAuth.getInstance();
     private RecyclerView mRecyclerView;
     private ExampleAdapter mAdapter;
-    private ArrayList<ExampleItem> routelist;
+    private ArrayList<ExampleItem> mroutelist;
     private RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+    Button goToLog;
     private String Uid = fAuth.getUid();
+    private String documentTitle;
     private List<String> list = new ArrayList<>();
+    private int p ;
 
 
-    public static final String EXTRA_TEXT = "selectRoute.EXTRA_TEXT";
 
-    public String documentTitle;
+    public static final String EXTRA_TEXT = "Logs.EXTRA_TEXT";
 
-    private static final String TAG = "selectRoute";
-
-    String x [];
+    private String x [];
 
     private void setDocumentTitle(String docTitle){
         documentTitle = docTitle;
     }
 
-    public String getDocumentTitle(){
+    private String getDocumentTitle(){
         return documentTitle;
     }
-
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_route);
+        setContentView(R.layout.activity_logs);
 
-        Button button = findViewById(R.id.startcon);
-        button.setOnClickListener(new View.OnClickListener() {
+        goToLog = findViewById(R.id.gotologs);
+        goToLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startConduct();
@@ -76,35 +66,24 @@ public class selectRoute extends AppCompatActivity implements Serializable {
         });
 
 
-
-
-
-
         CollectionReference routes = fStore.collection("users").document(Uid).collection("routes");
-
         routes.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
-                    routelist = new ArrayList<>();
+                    mroutelist = new ArrayList<>();
                     buildRecycler();
                     mAdapter.setOnItemClickListener(new ExampleAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {
-                            routelist.get(position).changeText1("Selected");
-                            setDocumentTitle( routelist.get(position).getmText2());
+                            mroutelist.get(position).changeText1("Selected");
+                            setDocumentTitle( mroutelist.get(position).getmText2());
                             mAdapter.notifyItemChanged(position);
-
-
-
-                            Log.d(TAG,documentTitle);
-
+                            p=position;
+                            Log.d("logs", String.valueOf(p));
 
                         }
                     });
-
-
-
 
 
 
@@ -118,41 +97,29 @@ public class selectRoute extends AppCompatActivity implements Serializable {
                     }
 
                     for (int i=0;i<x.length;i++){
-                        routelist.add(new ExampleItem( String.valueOf(routelist.size()+1),x[i]));
+                        mroutelist.add(new ExampleItem( "  ",x[i]));
                     }
 
 
-
-
-
                 }else{
-                    Log.d(TAG,"Error getting documents: ", task.getException());
+                    Log.d("Logs","Error getting documents: ", task.getException());
                 }
 
             }
 
         });
 
-
-
-
     }
-    public void startConduct(){
-        String s = getDocumentTitle();
 
-        Intent intent = new Intent(this, Coductor.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.putExtra(EXTRA_TEXT,s);
-        startActivity(intent);
 
-    }
+
 
 
 
     private void buildRecycler(){
-        mRecyclerView = findViewById(R.id.currentroutes);
+        mRecyclerView = findViewById(R.id.usedroutes);
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new ExampleAdapter(routelist);
+        mAdapter = new ExampleAdapter(mroutelist);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -161,6 +128,17 @@ public class selectRoute extends AppCompatActivity implements Serializable {
 
     }
 
+    public void startConduct(){
+
+        String s = getDocumentTitle();
+        mroutelist.get(p).changeText1("  ");
+        mAdapter.notifyItemChanged(p);
 
 
+        Intent intent = new Intent(this, LogsWithDates.class);
+
+        intent.putExtra(EXTRA_TEXT,s);
+        startActivity(intent);
+
+    }
 }

@@ -25,7 +25,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(),addroute.class));
     }
     public void selectRoute(View view){
-        startActivity(new Intent(getApplicationContext(),selectRoute.class));
+        Intent intent = new Intent(this, selectRoute.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+    }
+
+    public void logs(View view){
+        startActivity(new Intent(getApplicationContext(),Logs.class));
+
     }
 
 

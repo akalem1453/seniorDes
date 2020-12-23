@@ -34,13 +34,21 @@ public class login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         loading = findViewById(R.id.bar);
         emailtext = findViewById(R.id.email);
         passwordtext = findViewById(R.id.password);
         btn_login = findViewById(R.id.button_login);
         register_link = findViewById(R.id.register_link);
         fAuth = FirebaseAuth.getInstance();
+        fAuth.getCurrentUser();
         Passreset = findViewById(R.id.forgotpassword);
+
+        if (fAuth.getCurrentUser()!=null){
+            Intent intent =new Intent(login.this, MainActivity.class);
+
+            startActivity(intent);
+        }
 
 
         btn_login.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +77,10 @@ public class login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(login.this,"Login Successful",Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                            Intent intent =new Intent(login.this, MainActivity.class);
+
+                            startActivity(intent);
+
                         }else{
                             Toast.makeText(login.this,"Error:" + task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                             loading.setVisibility(View.GONE);

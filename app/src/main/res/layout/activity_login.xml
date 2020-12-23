@@ -70,6 +70,7 @@
         android:textColor="@color/colorPrimary"
         android:id="@+id/forgotpassword"
         android:layout_marginBottom="40dp"
+        android:visibility="gone"
         android:layout_alignBottom="@id/register_link"/>
 
 

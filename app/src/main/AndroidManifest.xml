@@ -14,7 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SenDes">
-        <activity android:name=".Coductor"></activity>
+        <activity android:name=".LohsWithTags"></activity>
+        <activity android:name=".LogsWithDates" />
+        <activity android:name=".Logs" />
+        <activity android:name=".Coductor" />
         <activity android:name=".selectRoute" />
         <activity
             android:name=".scanning"
